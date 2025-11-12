@@ -1,0 +1,1 @@
+export interface IRssTransformer { transform(data: string): string }

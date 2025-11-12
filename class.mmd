@@ -1,0 +1,70 @@
+classDiagram
+    class RssAppController {
+        - fetcher: IRssFetcher
+        - transformer: IRssTransformer
+        - outputs: IRssOutput[]
+        + constructor(fetcher: IRssFetcher, transformer: IRssTransformer, outputs: IRssOutput[])
+        + run(): Promise<string>
+    }
+
+    class IRssFetcher {
+        <<interface>>
+        + fetch(): Promise<string>
+    }
+
+    class IRssTransformer {
+        <<interface>>
+        + transform(data: string): string
+    }
+
+    class IRssOutput {
+        <<interface>>
+        + output(data: string): Promise<void>
+    }
+
+    class HttpRssFetcher {
+        - url: string
+        + constructor(url: string)
+        + fetch(): Promise<string>
+    }
+
+    class RemoveWordTransformer {
+        - word: string
+        + constructor(word?: string)
+        + transform(data: string): string
+    }
+
+    class ConsoleOutput {
+        + output(data: string): Promise<void>
+    }
+
+    class parseRss {
+        <<function>>
+        + parseRss(xmlText: string): RssItem[]
+    }
+
+    class RssItem {
+        <<type>>
+        title: string
+        link: string
+        pubDate: string
+    }
+
+    class HomePage {
+        <<React Component>>
+        - items: RssItem[]
+        - loading: boolean
+        - error: string | null
+        + fetchRss(): Promise<void>
+        + return(): JSX.Element
+    }
+
+    HttpRssFetcher ..|> IRssFetcher
+    RemoveWordTransformer ..|> IRssTransformer
+    ConsoleOutput ..|> IRssOutput
+
+    RssAppController --> IRssFetcher : uses
+    RssAppController --> IRssTransformer : uses
+    RssAppController --> IRssOutput : uses
+    HomePage --> parseRss : uses
+    HomePage --> RssItem : uses

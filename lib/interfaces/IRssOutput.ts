@@ -1,0 +1,1 @@
+export interface IRssOutput { output(data: string): Promise<void> }

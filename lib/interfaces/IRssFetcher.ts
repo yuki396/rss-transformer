@@ -1,0 +1,1 @@
+export interface IRssFetcher { fetch(): Promise<string> }
